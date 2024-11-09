@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #contentValue {
+            word-wrap: break-word;
+            display: block;
+            color: blue;
+        }
+        #boxStatus {
+            display: none;
+        }
+        .element-body {
+            padding: 5px;
+        }
+        i {
+            color: #888;
+        }
+        .mg-0 {
+            margin: 0;
+        }
+        .center {
+            text-align: center;
+        }
+        .container {
+            padding: 0px 200px;
+        }
+        .bg-gray {
+            background-color: #ececec;
+        }
+        .pd-y-1 {
+            padding: 10px 0 !important;
+        }
+        .text-primary {
+            color: #0d6efd;
+        }
+        .text-red {
+            color: #ff0000;
+        }
+        .font-size-lg {
+            font-size: 15em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <div class="element-body">
+        <h2 class="mg-0 center bg-gray pd-y-1">What Can JavaScript Do?</h2>
+        <h1 id="datetime" class="mg-0 text-red center pd-y-1 font-size-lg" ondblclick="copyClipboard(this)"></h1>
+    </div>
+    <div id="boxInput" class="element-body">
+        <span>Length of text: </span><input type="number" id="inputNumber" value="100" onchange="checkValueInput()"/>
+        <div id="boxStatus">
+            <span>Status: </span><span id="statusText">Show</span>
+        </div>
+    </div>
+    <div class="element-body">
+        <i>Hint: Double click on blue text to copy to clipboard</i>
+    </div>
+    <div id="listButton" class="element-body">
+        <input type="button" onclick='clearText()' value="Clear Text" />
+        <input type="button" onclick='generateString()' value="Random Text" />
+        <input id="btnHiddenContent" type="button" onclick='showField()' value="Hidden or Show Text" />
+    </div>
+    <p id="contentValue" ondblclick="copyClipboard(this)"></p>
+    </div>
+</body>
+<script>
+    // #region Define Constants
+    const MIN_LENGTH = 0;
+    const MAX_LENGTH = 1000;
+    const CONST_HIDDEN_OPTION = false;
+    const contentValue = document.getElementById("contentValue");
+    const statusText = document.getElementById("statusText");
+    const btnHiddenContent = document.getElementById("btnHiddenContent");
+    // #endregion
+
+    // #region Default Setting
+    btnHiddenContent.style.visibility = CONST_HIDDEN_OPTION ? "show" : "hidden";
+    // #endregion
+
+    // #region Function
+    function clearText() {
+        contentValue.innerHTML = "";
+    }
+    function showField() {
+        var boxStatus = document.getElementById("boxStatus");
+        contentValue.style.display = (contentValue.style.display === "block")
+            ? "none" : "block";
+        statusText.innerHTML = (contentValue.style.display === "none")
+            ? "Hidden" : "Show";
+        boxStatus.style.display = "inline-block";
+    }
+    // Declare all characters
+    const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    function generateString() {
+        if (checkValue() == false) return;
+        let result = ' ';
+        const charactersLength = characters.length;
+        for (let i = 0; i < inputNumber; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        contentValue.innerHTML = result;
+        contentValue.style.color = "blue";
+    }
+    function checkValue() {
+        inputNumber = document.getElementById("inputNumber").value;
+        if ((inputNumber <= MIN_LENGTH) || (inputNumber > MAX_LENGTH))
+        {
+            contentValue.innerHTML = "Length must be > " + MIN_LENGTH + " and <= " + MAX_LENGTH;
+            contentValue.style.color = "red";
+            return false;
+        }
+        return true;
+    }
+    function checkValueInput()
+    {
+        if (checkValue() == false) return;
+        contentValue.innerHTML = "";
+    }
+    function copyClipboard(input) {
+        if ((checkValue() == false) || (input == undefined)) return;
+        textShow = document.querySelector('#'+ input.id).textContent;
+        navigator.clipboard.writeText(textShow);
+        textShows = textShow;
+        if (textShow.length > 40)
+        {
+            textShows = textShow.substring(0, 40) + "...";
+        }
+        alert("Copied the text: " + textShows);
+    }
+
+    // Create a function to update the date and time
+    function updateDateTime() {
+        // create a new `Date` object
+        const now = new Date();
+
+        // get the current date and time as a string
+        const currentDateTime = now.toLocaleTimeString('it-IT');
+
+        // update the `textContent` property of the `span` element with the `id` of `datetime`
+        document.querySelector('#datetime').textContent = currentDateTime;
+    }
+
+    // call the `updateDateTime` function every second
+    setInterval(updateDateTime, 1000);
+    // #endregion
+</script>
+</html>
