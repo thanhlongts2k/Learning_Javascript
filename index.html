@@ -39,12 +39,12 @@
         </div>
     </div>
     <div class="element-body">
-        <p class="fst-italic text-secondary">Hint: Double click on blue text to copy to clipboard</p>
+        <p class="fst-italic text-secondary m-0">Hint: Double click on blue text to copy to clipboard</p>
     </div>
     <div id="listButton" class="element-body">
-        <input type="button" onclick='clearText()' value="Clear Text" />
-        <input type="button" onclick='generateString()' value="Random Text" />
-        <input id="btnHiddenContent" type="button" onclick='showField()' value="Hidden or Show Text" />
+        <input type="button" class="btn btn-sm btn-outline-secondary" onclick='clearText()' value="Clear Text" />
+        <input type="button" class="btn btn-sm btn-outline-secondary" onclick='generateString()' value="Random Text" />
+        <input type="button" class="btn btn-sm btn-outline-secondary" id="btnHiddenContent" onclick='showField()' value="Hidden or Show Text" />
     </div>
     <p id="contentValue" ondblclick="copyClipboard(this)"></p>
     </div>
