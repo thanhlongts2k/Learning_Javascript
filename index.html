@@ -18,11 +18,11 @@
         .element-body {
             padding: 5px;
         }
-        i {
-            color: #888;
-        }
         .text-red {
             color: #ff0000;
+        }
+        .text-langer {
+            font-size: 500% !important;
         }
     </style>
 </head>
@@ -30,7 +30,7 @@
     <div class="container">
     <div class="element-body">
         <h2 class="bg-secondary-subtle py-2 m-0 text-center">What Can JavaScript Do?</h2>
-        <h1 id="datetime" class="py-2 fs-1 m-0 text-red text-center" ondblclick="copyClipboard(this)"></h1>
+        <h1 id="datetime" class="py-2 fs-1 text-langer m-0 text-red text-center" ondblclick="copyClipboard(this)"></h1>
     </div>
     <div id="boxInput" class="element-body">
         <span>Length of text: </span><input type="number" id="inputNumber" value="100" onchange="checkValueInput()"/>
@@ -39,7 +39,7 @@
         </div>
     </div>
     <div class="element-body">
-        <i>Hint: Double click on blue text to copy to clipboard</i>
+        <p class="fst-italic text-secondary">Hint: Double click on blue text to copy to clipboard</p>
     </div>
     <div id="listButton" class="element-body">
         <input type="button" onclick='clearText()' value="Clear Text" />
