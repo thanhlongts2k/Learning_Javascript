@@ -1,2 +1,4 @@
 # Learning_Javascript
-This repository is for storing knowledge learned about JavaScript.
+
+- My name is `Long Louis`.
+- This repository is for storing knowledge learned about JavaScript.

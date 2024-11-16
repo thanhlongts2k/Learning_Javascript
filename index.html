@@ -33,7 +33,7 @@
         <h1 id="datetime" class="py-2 fs-1 text-langer m-0 text-red text-center" ondblclick="copyClipboard(this)"></h1>
     </div>
     <div id="boxInput" class="element-body">
-        <span>Length of text: </span><input type="number" id="inputNumber" value="100" onchange="checkValueInput()"/>
+        <span>Length of text: </span><input type="number" id="inputNumber" value="8" onchange="checkValueInput()"/>
         <div id="boxStatus">
             <span>Status: </span><span id="statusText">Show</span>
         </div>
@@ -75,7 +75,10 @@
             ? "Hidden" : "Show";
         boxStatus.style.display = "inline-block";
     }
+
     // Declare all characters
+    const specialCharacter = "~!@#$%^&*|☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼";
+
     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     function generateString() {
         if (checkValue() == false) return;
