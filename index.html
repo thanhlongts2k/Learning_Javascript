@@ -85,11 +85,10 @@
 
     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     function generateString() {
-        var useSpecialCharacter = document.getElementById('btnSpecialCharacter').checked;
-        debugger
         if (checkValue() == false) return;
 
         // Define first is special character
+        var useSpecialCharacter = document.getElementById('btnSpecialCharacter').checked;
         let result = useSpecialCharacter
             ? specialCharacter.charAt(Math.floor(Math.random() * specialCharacter.length))
             : "";
