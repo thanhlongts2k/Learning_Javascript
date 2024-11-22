@@ -119,9 +119,12 @@
     function copyClipboard(input) {
         if ((checkValue() == false) || (input == undefined)) return;
         textShow = document.querySelector('#'+ input.id).textContent;
-
-        textShow.select();
-        textShow.setSelectionRange(0, 99999);
+        var textArea = document.createElement("textarea");
+        textArea.value = textShow;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("Copy");
+        textArea.remove();
 
         navigator.clipboard.writeText(textShow);
         textShows = textShow;
