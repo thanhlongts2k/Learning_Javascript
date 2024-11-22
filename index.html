@@ -39,6 +39,10 @@
         </div>
     </div>
     <div id="listButton" class="element-body">
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="btnSpecialCharacter" autocomplete="off">
+            <label class="btn btn-sm btn-outline-primary" for="btnSpecialCharacter">Special character</label>
+        </div>
         <input type="button" class="btn btn-sm btn-outline-secondary" onclick='clearText()' value="Clear Text" />
         <input type="button" class="btn btn-sm btn-outline-secondary" onclick='generateString()' value="Random Text" />
         <input type="button" class="btn btn-sm btn-outline-secondary" id="btnHiddenContent" onclick='showField()' value="Hidden or Show Text" />
@@ -81,13 +85,18 @@
 
     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     function generateString() {
+        var useSpecialCharacter = document.getElementById('btnSpecialCharacter').checked;
+        debugger
         if (checkValue() == false) return;
 
         // Define first is special character
-        let result = specialCharacter.charAt(Math.floor(Math.random() * specialCharacter.length))
+        let result = useSpecialCharacter
+            ? specialCharacter.charAt(Math.floor(Math.random() * specialCharacter.length))
+            : "";
 
         const charactersLength = characters.length;
-        for (let i = 1; i < inputNumber; i++) {
+        let i = useSpecialCharacter ? 1 : 0;
+        for (; i < inputNumber; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         contentValue.innerHTML = result;
