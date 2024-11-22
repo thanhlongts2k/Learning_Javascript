@@ -8,9 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <style>
         #contentValue {
+            margin: 0;
+            text-align: center;
             word-wrap: break-word;
-            display: block;
-            color: #999999;
+            display: inline-block;
         }
         #boxStatus {
             display: none;
@@ -50,7 +51,9 @@
     <div class="element-body">
         <p class="fst-italic text-secondary m-0">Hint: Double click on text below to copy to clipboard</p>
     </div>
-    <p id="contentValue" ondblclick="copyClipboard(this)"></p>
+    <div class="element-body">
+        <p id="contentValue" ondblclick="copyClipboard(this)"></p>
+    </div>
     </div>
 </body>
 <script>
@@ -99,7 +102,7 @@
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         contentValue.innerHTML = result;
-        contentValue.style.color = "#999999";
+        contentValue.style.color = "#000000";
     }
     function checkValue() {
         inputNumber = document.getElementById("inputNumber").value;
@@ -145,7 +148,7 @@
         document.querySelector('#datetime').textContent = currentDateTime;
     }
 
-    // call the `updateDateTime` function every second
+    // call the `updateDateTime` function every 0.5 second
     setInterval(updateDateTime, 500);
     // #endregion
 </script>
