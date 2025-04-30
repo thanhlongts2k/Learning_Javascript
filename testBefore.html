@@ -47,6 +47,13 @@
                     </div>
                 </tr>
                 <tr>
+                    <div class="form-group my-2">
+                        <label for="accountName">Nhập nội dung chuyển khoản</label>
+                        <input type="text" class="form-control" id="bankingDescription" aria-describedby=""
+                            placeholder="Nội dung chuyển khoản" value="">
+                    </div>
+                </tr>
+                <tr>
                     <div class="form-group my-2 position-relative">
                     <label for="amount">Nhập giá tiền</label>
                     <div class="d-flex">
@@ -73,16 +80,18 @@
         function createQR() {
             let bankIdDefault = "VCB"
             let accountIdDefault = "1027784255"
-            let descriptionBank = "Thanh%20toan%20Xanh%20SM%20Bike";
+            let bankingDescriptionDefault = "Thanh%20toan%20Xanh%20SM%20Bike";
             let accountNameDefault = "Nguyen Thanh Long";
 
             const bankElement = document.getElementById("banksSelect");
             const accountIdElement = document.getElementById("accountId");
             const accountNameElement = document.getElementById("accountName");
+            const bankingDescriptionElement = document.getElementById("bankingDescription");
             const amountElement = document.getElementById("amount");
 
             let bankId = (bankElement?.value?.trim() === "") ? bankIdDefault : (bankElement?.value ?? bankIdDefault);
             let accountId = (accountIdElement?.value?.trim() === "") ? accountIdDefault : (accountIdElement?.value ?? accountIdDefault);
+            let bankingDescription = (bankingDescriptionElement?.value?.trim() === "") ? bankingDescriptionDefault : (bankingDescriptionElement?.value ?? bankingDescriptionDefault);
             let accountName = (accountNameElement?.value?.trim() === "") ? accountNameDefault : (accountNameElement?.value ?? accountNameDefault);
 
             let amount = 0;
@@ -92,7 +101,10 @@
                     amount = value + "000";
                 }
             }
-            let srcNew = "https://img.vietqr.io/image/" + bankId + "-" + accountId + "-print.jpg?amount=" + amount + "&addInfo="+ descriptionBank +"&accountName=" + accountName;
+            let srcNew = "https://img.vietqr.io/image/" + bankId + "-" + accountId
+                + "-print.jpg?amount=" + amount
+                + "&addInfo="+ bankingDescription
+                +"&accountName=" + accountName;
             const qrImg = document.getElementById("qrCode");
             qrImg.src = srcNew;
             console.log(srcNew);
