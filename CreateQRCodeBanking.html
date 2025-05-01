@@ -76,18 +76,17 @@
     </div>
     <script>
         const qrCode = document.getElementById("qrCode");
+        const bankElement = document.getElementById("banksSelect");
+        const accountIdElement = document.getElementById("accountId");
+        const accountNameElement = document.getElementById("accountName");
+        const bankingDescriptionElement = document.getElementById("bankingDescription");
+        const amountElement = document.getElementById("amount");
 
         function createQR() {
             let bankIdDefault = "VCB"
             let accountIdDefault = "1027784255"
             let bankingDescriptionDefault = "Thanh%20toan%20Xanh%20SM%20Bike";
             let accountNameDefault = "Nguyen Thanh Long";
-
-            const bankElement = document.getElementById("banksSelect");
-            const accountIdElement = document.getElementById("accountId");
-            const accountNameElement = document.getElementById("accountName");
-            const bankingDescriptionElement = document.getElementById("bankingDescription");
-            const amountElement = document.getElementById("amount");
 
             let bankId = (bankElement?.value?.trim() === "") ? bankIdDefault : (bankElement?.value ?? bankIdDefault);
             let accountId = (accountIdElement?.value?.trim() === "") ? accountIdDefault : (accountIdElement?.value ?? accountIdDefault);
@@ -112,8 +111,8 @@
         };
 
         document.getElementById("clearAmount").addEventListener("click", function () {
-            document.getElementById("amount").value = "";
-            document.getElementById("bankingDescription").value = "";
+            amountElement.value = "";
+            bankingDescriptionElement.value = "";
             createQR();
         });
         
