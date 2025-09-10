@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thực hiện y lệnh thuốc</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        td.ten-thuoc {
+            white-space: normal !important;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <button class="btn btn-link text-white me-2" onclick="window.location.href='patients.html'">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <span class="navbar-brand">Y lệnh thuốc</span>
+            <div class="d-flex ms-auto text-white">
+                <span class="me-3">👩‍⚕️ Điều dưỡng: <strong id="nurseInfo"></strong></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>👤 Bệnh nhân: <span class="text-primary" id="patientInfo"></span></h4>
+            <button class="btn btn-success" id="btnSign">Ký ✔</button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover bg-white shadow-sm align-middle">
+                <thead class="table-secondary">
+                    <tr>
+                        <th scope="col" style="width: 50px;">✔</th>
+                        <th scope="col">Tên thuốc / Ghi chú</th>
+                        <th scope="col" style="width: 150px;">Giờ</th>
+                        <th scope="col" style="width: 150px;">Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody id="drugList"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const nurse = localStorage.getItem("nurseName") || "Chưa login";
+        const patient = localStorage.getItem("patientName") || "Chưa chọn";
+        document.getElementById("nurseInfo").innerText = nurse;
+        document.getElementById("patientInfo").innerText = patient;
+
+        // giả lập thuốc
+        const drugs = [
+            { name: "Paracetamol 500mg", note: "Uống sau ăn" },
+            { name: "Amoxicillin 500mg", note: "Tránh dùng chung với sữa" },
+            { name: "Vitamin C", note: "Tránh dùng chung với sữa" },
+            { name: "Đồng", note: "Tránh dùng chung với sữa" }
+        ];
+
+        const tbody = document.getElementById("drugList");
+        drugs.forEach(d => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+        <td class="text-center"><input type="checkbox"></td>
+        <td class="ten-thuoc">
+          ${d.name} <br><small class="text-muted">Ghi chú: ${d.note}</small>
+        </td>
+        <td><input type="time" class="form-control form-control-sm"></td>
+        <td>
+          <div class="input-group input-group-sm">
+            <input type="number" class="form-control" min="1" max="99" style="max-width:70px;">
+            <span class="input-group-text">viên</span>
+          </div>
+        </td>
+      `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById("btnSign").addEventListener("click", function () {
+            const rows = document.querySelectorAll("#drugList tr");
+            let signedData = [];
+            rows.forEach(row => {
+                if (row.querySelector("input[type=checkbox]").checked) {
+                    signedData.push({
+                        drug: row.querySelector(".ten-thuoc").innerText.trim(),
+                        time: row.querySelector("input[type=time]").value,
+                        quantity: row.querySelector("input[type=number]").value
+                    });
+                }
+            });
+
+            if (signedData.length === 0) {
+                alert("Bạn chưa chọn thuốc nào để ký!");
+                return;
+            }
+
+            console.log("Dữ liệu gửi server:", {
+                nurse: nurse,
+                patient: patient,
+                drugs: signedData
+            });
+
+            alert("Đã ký thành công (demo, chưa gửi server)!");
+        });
+    </script>
+</body>
+
+</html>

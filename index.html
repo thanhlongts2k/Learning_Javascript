@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        p {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div id="randomText">Original Text</div>
+    <div id="timmerCouter">0</div>
+    <p id="dirc1">1</p>
+    <p id="dirc2">2</p>
+    <p id="dirc3">3</p>
+    <input type="button" id="Start" onclick="animateTextChange()" value="Random" />
+    <input type="button" id="calculateDirc" onclick="calculateDirc()" value="calculateDirc" />
+
+    <script>
+        const textElement = document.getElementById('randomText');
+        const timmerCouterElement = document.getElementById('timmerCouter');
+        const dirc1Element = document.getElementById('dirc1');
+        const dirc2Element = document.getElementById('dirc2');
+        const dirc3Element = document.getElementById('dirc3');
+
+        let dirc1Val = 1;
+        let dirc2Val = 1;
+        let dirc3Val = 1;
+        let totalDirc = dirc1Val + dirc2Val + dirc3Val;
+
+        const originalText = textElement.innerText;
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const numberDirc = [1, 2, 3, 4, 5, 6];
+        let isAnimating = false; // Flag to avoid animation overlap
+
+        function generateRandomText(length) {
+            let randomText = '';
+            for (let i = 0; i < length; i++) {
+              randomText += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return randomText;
+          }
+
+          function generateRandomDirc() {
+            dirc1Val = numberDirc[Math.floor(Math.random() * numberDirc.length)];
+            dirc2Val = numberDirc[Math.floor(Math.random() * numberDirc.length)];
+            dirc3Val = numberDirc[Math.floor(Math.random() * numberDirc.length)];
+          }
+
+        function animateTextChange() {
+          if (isAnimating) return; // If animation is already running, exit
+    
+          isAnimating = true; // Set animation flag
+    
+          let currentText = textElement.innerText;
+          let newText = generateRandomText(originalText.length);
+          generateRandomDirc();
+          let counter = 0;
+    
+          const interval = setInterval(() => {
+            let updatedText = '';
+            for (let i = 0; i < originalText.length; i++) {
+                if (i < counter) {
+                    updatedText += originalText[i];
+                } else {
+                  updatedText += newText[i];
+                }
+            }
+            textElement.innerText = updatedText;
+            counter++;
+            if (counter > originalText.length) {
+                clearInterval(interval);
+                textElement.innerText = originalText;
+                isAnimating = false; // Reset animation flag
+            }
+          }, 50); // Adjust animation speed (milliseconds)
+        }
+        const timerSecond = 3;
+        const timerMilisecond = 1000;
+        const totalTimer = timerMilisecond * timerSecond;
+        let timeCouter = timerSecond;
+
+        function calculateTimer() {
+
+            setInterval(() => {
+                timmerCouterElement.innerText = timeCouter -= 1;
+            }, timerMilisecond);
+        }
+        function calculateDirc() {
+            calculateTimer();
+
+            setInterval(() => {
+                generateRandomDirc();
+    
+                dirc1Element.innerText = dirc1Val;
+                dirc2Element.innerText = dirc2Val;
+                dirc3Element.innerText = dirc3Val;
+        
+                totalDirc = dirc1Val + dirc2Val + dirc3Val;
+                console.log(dirc1Val + "+" + dirc2Val + "+" + dirc3Val + "=" + totalDirc);
+
+                timeCouter = timerSecond;
+              }, timerMilisecond * timerSecond);
+        }
+        document.getElementById("calculateDirc").addEventListener("load", calculateDirc());
+    </script>
+</body>
+</html>
