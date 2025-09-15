@@ -34,32 +34,43 @@
 🔑 Đây là chỗ hay bị quên nhất.
 
 ### Tạo login cho AppPool Identity
+```sql
 CREATE LOGIN [IIS APPPOOL\BookingsApp] FROM WINDOWS;
+```
 
 ### Map login vào database
+```sql
 USE [NTLong];
 CREATE USER [IIS APPPOOL\BookingsApp] FOR LOGIN [IIS APPPOOL\BookingsApp];
+```
 
 ### Gán quyền
+```sql
 ALTER ROLE db_datareader ADD MEMBER [IIS APPPOOL\BookingsApp];
 ALTER ROLE db_datawriter ADD MEMBER [IIS APPPOOL\BookingsApp];
 -- Hoặc toàn quyền (test/dev)
 ALTER ROLE db_owner ADD MEMBER [IIS APPPOOL\BookingsApp];
+```
 
 ---
 
 ## 4. Connection String
 Trong appsettings.json:
+```json
 "ConnectionStrings": {
   "DefaultConnection": "Server=localhost;Database=NTLong;Trusted_Connection=True;TrustServerCertificate=True"
 }
+```
 
 ---
 
 ## 5. Logging (Serilog example)
+
+```csharp
 Log.Logger = new LoggerConfiguration()
     .WriteTo.File("C:\inetpub\BookingsApp\logs\log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
+```
 
 ---
 
