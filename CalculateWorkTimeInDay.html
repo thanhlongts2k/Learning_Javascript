@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Tính thời gian làm việc</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding: 20px; }
+    .clock-box {
+      display: inline-block;
+      padding: 8px 20px;
+      border: 2px solid #0d6efd;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 20px;
+      background: #f8f9fa;
+    }
+    .time-label { font-weight: 600; margin-top: 15px; }
+    .time-block { max-width: 400px; }
+  </style>
+</head>
+<body>
+  <div class="container text-center">
+    <h2 class="mb-3 text-primary">Tính thời gian làm việc</h2>
+    <div class="clock-box" id="clock"></div>
+  </div>
+
+  <div class="container">
+    <!-- Buổi sáng -->
+    <div class="mb-3 time-block">
+      <label class="form-label time-label" id="labelMorning">Thời gian từ 07:30 - ?</label>
+      <div class="input-group">
+        <input type="text" class="form-control text-center" id="timeMorning" readonly>
+        <span class="input-group-text" id="timeMorningHHMM"></span>
+      </div>
+    </div>
+
+    <!-- Buổi chiều -->
+    <div class="mb-3 time-block">
+      <label class="form-label time-label" id="labelAfternoon">Thời gian từ 13:30 - ?</label>
+      <div class="input-group">
+        <input type="text" class="form-control text-center" id="timeAfternoon" readonly>
+        <span class="input-group-text" id="timeAfternoonHHMM"></span>
+      </div>
+    </div>
+
+    <!-- Tổng -->
+    <div class="mb-3 time-block">
+      <label class="form-label time-label" id="labelTotal">Thời gian từ 07:30 - ? (tổng, trừ nghỉ trưa)</label>
+      <div class="input-group">
+        <input type="text" class="form-control text-center" id="timeTotal" readonly>
+        <span class="input-group-text" id="timeTotalHHMM"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toMinutes(date) {
+      return date.getHours() * 60 + date.getMinutes();
+    }
+
+    function formatTime(hh, mm) {
+      return (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm;
+    }
+
+    function formatHHMM(minutes) {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+    }
+
+    function calculateTimes() {
+      const now = new Date();
+      const nowMin = toMinutes(now);
+
+      const startMorning = 7 * 60 + 30;   // 07:30
+      const endMorning   = 12 * 60;       // 12:00
+      const startAfternoon = 13 * 60 + 30; // 13:30
+      const endAfternoon   = 17 * 60;      // 17:00
+
+      let morning = 0, afternoon = 0, total = 0;
+
+      // [1] Buổi sáng
+      let morningEndDisplay = formatTime(now.getHours(), now.getMinutes());
+      if (nowMin <= startMorning) {
+        morning = 0;
+      } else if (nowMin <= endMorning) {
+        morning = nowMin - startMorning;
+      } else {
+        morning = endMorning - startMorning;
+        morningEndDisplay = "12:00";
+      }
+
+      // [2] Buổi chiều
+      let afternoonEndDisplay = formatTime(now.getHours(), now.getMinutes());
+      if (nowMin <= startAfternoon) {
+        afternoon = 0;
+        afternoonEndDisplay = "--:--";
+      } else if (nowMin <= endAfternoon) {
+        afternoon = nowMin - startAfternoon;
+      } else {
+        afternoon = endAfternoon - startAfternoon;
+        afternoonEndDisplay = "17:00";
+      }
+
+      // [3] Tổng
+      let totalEndDisplay = formatTime(now.getHours(), now.getMinutes());
+      if (nowMin <= startMorning) {
+        total = 0;
+        totalEndDisplay = "--:--";
+      } else if (nowMin <= endMorning) {
+        total = nowMin - startMorning;
+      } else if (nowMin <= startAfternoon) {
+        total = endMorning - startMorning;
+        totalEndDisplay = "12:00";
+      } else if (nowMin <= endAfternoon) {
+        total = (endMorning - startMorning) + (nowMin - startAfternoon);
+      } else {
+        total = (endMorning - startMorning) + (endAfternoon - startAfternoon);
+        totalEndDisplay = "17:00";
+      }
+
+      // Update UI
+      document.getElementById("labelMorning").innerText = "Thời gian từ 07:30 - " + morningEndDisplay;
+      document.getElementById("timeMorning").value = morning + " phút";
+      document.getElementById("timeMorningHHMM").innerText = formatHHMM(morning);
+
+      document.getElementById("labelAfternoon").innerText = "Thời gian từ 13:30 - " + afternoonEndDisplay;
+      document.getElementById("timeAfternoon").value = afternoon + " phút";
+      document.getElementById("timeAfternoonHHMM").innerText = formatHHMM(afternoon);
+
+      document.getElementById("labelTotal").innerText = "Thời gian từ 07:30 - " + totalEndDisplay + " (tổng, trừ nghỉ trưa)";
+      document.getElementById("timeTotal").value = total + " phút";
+      document.getElementById("timeTotalHHMM").innerText = formatHHMM(total);
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("vi-VN");
+      document.getElementById("clock").innerText = timeStr;
+    }
+
+    function tick() {
+      updateClock();
+      calculateTimes();
+    }
+
+    setInterval(tick, 1000);
+    tick();
+  </script>
+</body>
+</html>
