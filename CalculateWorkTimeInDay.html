@@ -225,13 +225,16 @@
       let totalMinutes = 0, totalEnd = now;
       if (now <= lunchStart) {
         totalMinutes = morningMinutes;
+      } else if (now > lunchStart && now <= lunchEnd) {
+        totalMinutes = diffMinutes(startAM, lunchStart);
       } else if (now > lunchEnd && now < endPM) {
         totalMinutes = diffMinutes(startAM, now) - diffMinutes(lunchStart, lunchEnd);
       } else if (now >= endPM) {
         totalMinutes = diffMinutes(startAM, endPM) - diffMinutes(lunchStart, lunchEnd);
         totalEnd = endPM;
       }
-      document.getElementById("end-total").textContent = totalEnd.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+
+      document.getElementById("end-total").textContent = now.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
       document.getElementById("total-min").value = totalMinutes;
       document.getElementById("total-hm").value = formatHM(totalMinutes);
     }
