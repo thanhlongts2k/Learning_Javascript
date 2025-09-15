@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Tính thời gian làm việc</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Quan trọng cho mobile -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -22,10 +23,12 @@
     .time-row {
       margin-bottom: 15px;
     }
-    .header-small {
+    .right-header {
       font-size: 0.85rem;
       font-weight: 600;
-      color: #6c757d;
+      color: #198754;
+      margin-bottom: 5px;
+      text-align: center;
     }
   </style>
 </head>
@@ -45,53 +48,55 @@
         </div>
       </div>
 
-      <!-- Header cho cột phải -->
+      <!-- Header cột phải -->
       <div class="row mb-2">
-        <div class="col-7"></div>
-        <div class="col-5 text-end header-small">Phút | Giờ:Phút</div>
+        <div class="col-12 col-md-7"></div>
+        <div class="col-12 col-md-5">
+          <div class="right-header">Phút | Giờ:Phút</div>
+        </div>
       </div>
 
       <div class="row mb-3 align-items-center">
-        <div class="col-7">
+        <div class="col-12 col-md-7">
           <span class="time-label"><i class="fa-solid fa-sun"></i> Buổi sáng:</span><br>
           Thời gian từ 07:30 - <span id="endMorning">--:--</span>
         </div>
-        <div class="col-5 text-end">
+        <div class="col-12 col-md-5 d-flex justify-content-start justify-content-md-end gap-2 mt-2 mt-md-0">
           <input type="text" id="minutesMorning" readonly
-                 class="form-control form-control-sm d-inline-block text-center"
+                 class="form-control form-control-sm text-center"
                  style="width:70px"> 
           <input type="text" id="hhmmMorning" disabled
-                 class="form-control form-control-sm d-inline-block text-center"
+                 class="form-control form-control-sm text-center"
                  style="width:70px">
         </div>
       </div>
 
       <div class="row mb-3 align-items-center">
-        <div class="col-7">
+        <div class="col-12 col-md-7">
           <span class="time-label"><i class="fa-solid fa-cloud-sun"></i> Buổi chiều:</span><br>
           Thời gian từ 13:30 - <span id="endAfternoon">--:--</span>
         </div>
-        <div class="col-5 text-end">
+        <div class="col-12 col-md-5 d-flex justify-content-start justify-content-md-end gap-2 mt-2 mt-md-0">
           <input type="text" id="minutesAfternoon" readonly
-                 class="form-control form-control-sm d-inline-block text-center"
+                 class="form-control form-control-sm text-center"
                  style="width:70px">
           <input type="text" id="hhmmAfternoon" disabled
-                 class="form-control form-control-sm d-inline-block text-center"
+                 class="form-control form-control-sm text-center"
                  style="width:70px">
         </div>
       </div>
 
       <div class="row mb-2 align-items-center">
-        <div class="col-7">
+        <div class="col-12 col-md-7">
           <span class="time-label"><i class="fa-solid fa-calendar-day"></i> Cả ngày:</span><br>
           Thời gian từ 07:30 - <span id="endFull">--:--</span>
         </div>
-        <div class="col-5 text-end">
+        <div class="col-12 col-md-5 d-flex justify-content-start justify-content-md-end gap-2 mt-2 mt-md-0">
           <input type="text" id="minutesFull" readonly
-                 class="form-control form-control-sm d-inline-block text-center"
+                 class="form-control form-control-sm text-center"
                  style="width:70px">
           <input type="text" id="hhmmFull" disabled
-                 class="form-control form-control-sm d-inline-block text-center"
+                 class="form-control form-control-sm text-center"
                  style="width:70px">
         </div>
       </div>
