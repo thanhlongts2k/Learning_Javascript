@@ -3,166 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <title>Tính thời gian làm việc</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Quan trọng cho mobile -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
-    .clock-box {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 8px 12px;
-      background-color: #f8f9fa;
-      display: inline-block;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    .time-label {
-      font-weight: 600;
-      color: #0d6efd;
-    }
-    .time-row {
-      margin-bottom: 15px;
-    }
-    .right-header {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #198754;
-      margin-bottom: 5px;
-      text-align: center;
-    }
+    body { background: #f8f9fa; }
+    h2 { color: #0d6efd; font-weight: bold; }
+    .clock-box { border: 1px solid #dee2e6; border-radius: 8px; padding: 8px 16px; display: inline-block; background: #fff; font-size: 1.1rem; font-weight: 500; }
+    .time-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 15px; margin-bottom: 1rem; }
+    .time-card label { font-weight: 500; color: #0d6efd; }
+    input[disabled] { background: #e9ecef; font-weight: bold; text-align: center; width: 90px; }
   </style>
 </head>
-<body class="bg-light">
-
-<div class="container py-4">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h2 class="text-center text-primary mb-3">
-        <i class="fa-solid fa-business-time"></i> Tính thời gian làm việc
-      </h2>
-
-      <div class="d-flex justify-content-center mb-4">
-        <div class="clock-box">
-          <i class="fa-regular fa-clock"></i>
-          <span id="clock">--:--:--</span>
-        </div>
+<body>
+  <div class="container py-4">
+    <h2 class="text-center mb-3">
+      <i class="fa-solid fa-business-time"></i> Tính thời gian làm việc
+    </h2>
+    <div class="d-flex justify-content-center mb-4">
+      <div class="clock-box">
+        <i class="fa-regular fa-clock"></i> <span id="clock">--:--:--</span>
       </div>
-
-      <!-- Header cột phải -->
-      <div class="row mb-2">
-        <div class="col-12 col-md-7"></div>
-        <div class="col-12 col-md-5">
-          <div class="right-header">Phút | Giờ:Phút</div>
-        </div>
-      </div>
-
-      <div class="row mb-3 align-items-center">
-        <div class="col-12 col-md-7">
-          <span class="time-label"><i class="fa-solid fa-sun"></i> Buổi sáng:</span><br>
-          Thời gian từ 07:30 - <span id="endMorning">--:--</span>
-        </div>
-        <div class="col-12 col-md-5 d-flex justify-content-start justify-content-md-end gap-2 mt-2 mt-md-0">
-          <input type="text" id="minutesMorning" readonly
-                 class="form-control form-control-sm text-center"
-                 style="width:70px"> 
-          <input type="text" id="hhmmMorning" disabled
-                 class="form-control form-control-sm text-center"
-                 style="width:70px">
-        </div>
-      </div>
-
-      <div class="row mb-3 align-items-center">
-        <div class="col-12 col-md-7">
-          <span class="time-label"><i class="fa-solid fa-cloud-sun"></i> Buổi chiều:</span><br>
-          Thời gian từ 13:30 - <span id="endAfternoon">--:--</span>
-        </div>
-        <div class="col-12 col-md-5 d-flex justify-content-start justify-content-md-end gap-2 mt-2 mt-md-0">
-          <input type="text" id="minutesAfternoon" readonly
-                 class="form-control form-control-sm text-center"
-                 style="width:70px">
-          <input type="text" id="hhmmAfternoon" disabled
-                 class="form-control form-control-sm text-center"
-                 style="width:70px">
-        </div>
-      </div>
-
-      <div class="row mb-2 align-items-center">
-        <div class="col-12 col-md-7">
-          <span class="time-label"><i class="fa-solid fa-calendar-day"></i> Cả ngày:</span><br>
-          Thời gian từ 07:30 - <span id="endFull">--:--</span>
-        </div>
-        <div class="col-12 col-md-5 d-flex justify-content-start justify-content-md-end gap-2 mt-2 mt-md-0">
-          <input type="text" id="minutesFull" readonly
-                 class="form-control form-control-sm text-center"
-                 style="width:70px">
-          <input type="text" id="hhmmFull" disabled
-                 class="form-control form-control-sm text-center"
-                 style="width:70px">
-        </div>
-      </div>
-
     </div>
+
+    <div id="time-container" class="col-12 col-md-8 mx-auto"></div>
   </div>
-</div>
 
-<script>
-function pad(num) {
-  return num.toString().padStart(2, '0');
-}
+  <script>
+    // === CONSTANT GIỜ LÀM VIỆC ===
+    const START_AM = "07:30";
+    const LUNCH_START = "12:00";
+    const LUNCH_END = "13:30";
+    const END_PM = "17:00";
 
-function formatHM(mins) {
-  let h = Math.floor(mins / 60);
-  let m = mins % 60;
-  return pad(h) + ":" + pad(m);
-}
+    // === Hàm hỗ trợ ===
+    function parseTime(str) {
+      const [h, m] = str.split(":").map(Number);
+      const d = new Date();
+      d.setHours(h, m, 0, 0);
+      return d;
+    }
+    function diffMinutes(t1, t2) {
+      return Math.max(0, Math.floor((t2 - t1) / 60000));
+    }
+    function formatHM(minutes) {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+    }
 
-function updateClock() {
-  let now = new Date();
-  let hh = pad(now.getHours());
-  let mm = pad(now.getMinutes());
-  let ss = pad(now.getSeconds());
-  document.getElementById("clock").textContent = `${hh}:${mm}:${ss}`;
+    // === Render giao diện từ constants ===
+    const timeConfigs = [
+      { id: "morning", icon: "fa-sun", label: `Buổi sáng: Thời gian từ ${START_AM} - <span id="end-morning"></span>` },
+      { id: "afternoon", icon: "fa-cloud-sun", label: `Buổi chiều: Thời gian từ ${LUNCH_END} - <span id="end-afternoon"></span>` },
+      { id: "total", icon: "fa-calendar-day", label: `Cả ngày: Thời gian từ ${START_AM} - <span id="end-total"></span>` },
+    ];
 
-  // Mốc giờ
-  let startMorning = new Date(now); startMorning.setHours(7,30,0,0);
-  let endMorningLimit = new Date(now); endMorningLimit.setHours(12,0,0,0);
+    const container = document.getElementById("time-container");
+    timeConfigs.forEach(cfg => {
+      container.innerHTML += `
+        <div class="time-card">
+          <label><i class="fa-solid ${cfg.icon}"></i> ${cfg.label}</label>
+          <div class="d-flex align-items-center gap-2 mt-2">
+            <input type="text" id="${cfg.id}-min" class="form-control form-control-sm" disabled>
+            <input type="text" id="${cfg.id}-hm" class="form-control form-control-sm" disabled>
+          </div>
+        </div>`;
+    });
 
-  let startAfternoon = new Date(now); startAfternoon.setHours(13,30,0,0);
-  let endAfternoonLimit = new Date(now); endAfternoonLimit.setHours(17,0,0,0);
+    // === Cập nhật thời gian ===
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent = now.toLocaleTimeString("vi-VN");
 
-  // Morning
-  let endMorning = now < endMorningLimit ? now : endMorningLimit;
-  document.getElementById("endMorning").textContent = pad(endMorning.getHours())+":"+pad(endMorning.getMinutes());
-  let diffMorning = (endMorning - startMorning)/60000;
-  if (diffMorning < 0) diffMorning = 0;
-  document.getElementById("minutesMorning").value = Math.floor(diffMorning);
-  document.getElementById("hhmmMorning").value = formatHM(Math.floor(diffMorning));
+      const startAM = parseTime(START_AM);
+      const lunchStart = parseTime(LUNCH_START);
+      const lunchEnd = parseTime(LUNCH_END);
+      const endPM = parseTime(END_PM);
 
-  // Afternoon
-  let endAfternoon = now < endAfternoonLimit ? now : endAfternoonLimit;
-  document.getElementById("endAfternoon").textContent = pad(endAfternoon.getHours())+":"+pad(endAfternoon.getMinutes());
-  let diffAfternoon = (endAfternoon - startAfternoon)/60000;
-  if (diffAfternoon < 0) diffAfternoon = 0;
-  document.getElementById("minutesAfternoon").value = Math.floor(diffAfternoon);
-  document.getElementById("hhmmAfternoon").value = formatHM(Math.floor(diffAfternoon));
+      // [1] Morning
+      let morningMinutes = 0;
+      let morningEnd = now < lunchStart ? now : lunchStart;
+      document.getElementById("end-morning").textContent = morningEnd.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      if (now > startAM) morningMinutes = diffMinutes(startAM, morningEnd);
+      document.getElementById("morning-min").value = morningMinutes;
+      document.getElementById("morning-hm").value = formatHM(morningMinutes);
 
-  // Full day
-  let endFull = now;
-  document.getElementById("endFull").textContent = pad(endFull.getHours())+":"+pad(endFull.getMinutes());
-  let diffFull = 0;
-  if (now <= endMorningLimit) {
-    diffFull = (now - startMorning)/60000;
-  } else {
-    diffFull = (endMorningLimit - startMorning)/60000 + (now - startAfternoon)/60000;
-  }
-  if (diffFull < 0) diffFull = 0;
-  document.getElementById("minutesFull").value = Math.floor(diffFull);
-  document.getElementById("hhmmFull").value = formatHM(Math.floor(diffFull));
-}
+      // [2] Afternoon
+      let afternoonMinutes = 0;
+      let afternoonEnd = now < endPM ? now : endPM;
+      if (now > lunchEnd) afternoonMinutes = diffMinutes(lunchEnd, afternoonEnd);
+      document.getElementById("end-afternoon").textContent = afternoonEnd.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      document.getElementById("afternoon-min").value = afternoonMinutes;
+      document.getElementById("afternoon-hm").value = formatHM(afternoonMinutes);
 
-setInterval(updateClock, 1000);
-updateClock();
-</script>
+      // [3] Total
+      let totalMinutes = morningMinutes;
+      let totalEnd;
+      if (now <= lunchStart) {
+        totalMinutes = morningMinutes;
+        totalEnd = now;
+      } else if (now > lunchEnd && now < endPM) {
+        totalMinutes = diffMinutes(startAM, now) - diffMinutes(lunchStart, lunchEnd);
+        totalEnd = now;
+      } else if (now >= endPM) {
+        totalMinutes = diffMinutes(startAM, endPM) - diffMinutes(lunchStart, lunchEnd);
+        totalEnd = endPM;
+      } else {
+        totalEnd = lunchStart;
+      }
+      document.getElementById("end-total").textContent = totalEnd.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      document.getElementById("total-min").value = totalMinutes;
+      document.getElementById("total-hm").value = formatHM(totalMinutes);
+    }
 
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
 </body>
 </html>
