@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <title>Tính thời gian làm việc</title>
@@ -7,34 +8,157 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
-    body { background: #f8f9fa; }
-    h2 { color: #0d6efd; font-weight: bold; }
-    .clock-box { border: 1px solid #dee2e6; border-radius: 8px; padding: 8px 16px; display: inline-block; background: #fff; font-size: 1.1rem; font-weight: 500; }
-    .time-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 15px; margin-bottom: 1rem; }
-    .time-card label { font-weight: 500; color: #0d6efd; }
-    input[disabled] { background: #e9ecef; font-weight: bold; text-align: center; width: 90px; }
+    body {
+      background: #f8f9fa;
+    }
+
+    h2 {
+      color: #0d6efd;
+      font-weight: bold;
+    }
+
+    .clock-box {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 8px 16px;
+      background: #fff;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .time-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      padding: 15px;
+      margin-bottom: 1rem;
+    }
+
+    .time-card label {
+      font-weight: 500;
+      color: #0d6efd;
+    }
+
+    input[disabled] {
+      background: #e9ecef;
+      font-weight: bold;
+      text-align: center;
+      width: 90px;
+    }
+
+    .dropdown-menu {
+      min-width: 200px;
+    }
   </style>
 </head>
+
 <body>
   <div class="container py-4">
-    <h2 class="text-center mb-3">
-      <i class="fa-solid fa-business-time"></i> Tính thời gian làm việc
-    </h2>
+    <!-- Header -->
+    <div class="position-relative mb-3">
+      <!-- Nút menu góc phải -->
+      <div class="dropdown position-absolute top-0 end-0 mt-2 me-2">
+        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#configModal">
+              <i class="fa-solid fa-gear"></i> Sửa cấu hình thời gian
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tiêu đề căn giữa -->
+      <h2 class="text-center mb-0">
+        <i class="fa-solid fa-business-time"></i> Tính thời gian làm việc
+      </h2>
+    </div>
+
+    <!-- Đồng hồ -->
     <div class="d-flex justify-content-center mb-4">
       <div class="clock-box">
         <i class="fa-regular fa-clock"></i> <span id="clock">--:--:--</span>
       </div>
     </div>
 
+    <!-- Khu vực kết quả -->
     <div id="time-container" class="col-12 col-md-8 mx-auto"></div>
   </div>
 
+  <!-- Modal cấu hình -->
+  <div class="modal fade" id="configModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-gear"></i> Sửa cấu hình thời gian</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Bắt đầu buổi sáng</label>
+            <input type="time" class="form-control" id="cfgStartAM">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Bắt đầu nghỉ trưa</label>
+            <input type="time" class="form-control" id="cfgLunchStart">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Kết thúc nghỉ trưa</label>
+            <input type="time" class="form-control" id="cfgLunchEnd">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Kết thúc buổi chiều</label>
+            <input type="time" class="form-control" id="cfgEndPM">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button class="btn btn-primary" onclick="saveConfig()" data-bs-dismiss="modal">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // === CONSTANT GIỜ LÀM VIỆC ===
-    const START_AM = "07:30";
-    const LUNCH_START = "12:00";
-    const LUNCH_END = "13:30";
-    const END_PM = "17:00";
+    // === Load hoặc tạo config mặc định ===
+    function loadConfig() {
+      let cfg = localStorage.getItem("WorkTime.config");
+      if (!cfg) {
+        cfg = {
+          START_AM: "07:30",
+          LUNCH_START: "12:00",
+          LUNCH_END: "13:30",
+          END_PM: "17:00"
+        };
+        localStorage.setItem("WorkTime.config", JSON.stringify(cfg));
+      } else {
+        cfg = JSON.parse(cfg);
+      }
+      return cfg;
+    }
+
+    let config = loadConfig();
+
+    // Gán vào modal khi mở
+    document.getElementById("configModal").addEventListener("show.bs.modal", () => {
+      document.getElementById("cfgStartAM").value = config.START_AM;
+      document.getElementById("cfgLunchStart").value = config.LUNCH_START;
+      document.getElementById("cfgLunchEnd").value = config.LUNCH_END;
+      document.getElementById("cfgEndPM").value = config.END_PM;
+    });
+
+    // Lưu config
+    function saveConfig() {
+      config.START_AM = document.getElementById("cfgStartAM").value;
+      config.LUNCH_START = document.getElementById("cfgLunchStart").value;
+      config.LUNCH_END = document.getElementById("cfgLunchEnd").value;
+      config.END_PM = document.getElementById("cfgEndPM").value;
+      localStorage.setItem("WorkTime.config", JSON.stringify(config));
+      location.reload(); // reload lại trang cho chắc
+    }
 
     // === Hàm hỗ trợ ===
     function parseTime(str) {
@@ -52,11 +176,11 @@
       return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
     }
 
-    // === Render giao diện từ constants ===
+    // === Render block ===
     const timeConfigs = [
-      { id: "morning", icon: "fa-sun", label: `Buổi sáng: Thời gian từ ${START_AM} - <span id="end-morning"></span>` },
-      { id: "afternoon", icon: "fa-cloud-sun", label: `Buổi chiều: Thời gian từ ${LUNCH_END} - <span id="end-afternoon"></span>` },
-      { id: "total", icon: "fa-calendar-day", label: `Cả ngày: Thời gian từ ${START_AM} - <span id="end-total"></span>` },
+      { id: "morning", icon: "fa-sun", label: `Buổi sáng: Thời gian từ ${config.START_AM} - <span id="end-morning"></span>` },
+      { id: "afternoon", icon: "fa-cloud-sun", label: `Buổi chiều: Thời gian từ ${config.LUNCH_END} - <span id="end-afternoon"></span>` },
+      { id: "total", icon: "fa-calendar-day", label: `Cả ngày: Thời gian từ ${config.START_AM} - <span id="end-total"></span>` },
     ];
 
     const container = document.getElementById("time-container");
@@ -71,48 +195,43 @@
         </div>`;
     });
 
-    // === Cập nhật thời gian ===
+    // === Cập nhật đồng hồ & tính toán ===
     function updateClock() {
       const now = new Date();
       document.getElementById("clock").textContent = now.toLocaleTimeString("vi-VN");
 
-      const startAM = parseTime(START_AM);
-      const lunchStart = parseTime(LUNCH_START);
-      const lunchEnd = parseTime(LUNCH_END);
-      const endPM = parseTime(END_PM);
+      const startAM = parseTime(config.START_AM);
+      const lunchStart = parseTime(config.LUNCH_START);
+      const lunchEnd = parseTime(config.LUNCH_END);
+      const endPM = parseTime(config.END_PM);
 
-      // [1] Morning
+      // Morning
       let morningMinutes = 0;
       let morningEnd = now < lunchStart ? now : lunchStart;
-      document.getElementById("end-morning").textContent = morningEnd.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      document.getElementById("end-morning").textContent = morningEnd.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
       if (now > startAM) morningMinutes = diffMinutes(startAM, morningEnd);
       document.getElementById("morning-min").value = morningMinutes;
       document.getElementById("morning-hm").value = formatHM(morningMinutes);
 
-      // [2] Afternoon
+      // Afternoon
       let afternoonMinutes = 0;
       let afternoonEnd = now < endPM ? now : endPM;
       if (now > lunchEnd) afternoonMinutes = diffMinutes(lunchEnd, afternoonEnd);
-      document.getElementById("end-afternoon").textContent = afternoonEnd.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      document.getElementById("end-afternoon").textContent = afternoonEnd.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
       document.getElementById("afternoon-min").value = afternoonMinutes;
       document.getElementById("afternoon-hm").value = formatHM(afternoonMinutes);
 
-      // [3] Total
-      let totalMinutes = morningMinutes;
-      let totalEnd;
+      // Total
+      let totalMinutes = 0, totalEnd = now;
       if (now <= lunchStart) {
         totalMinutes = morningMinutes;
-        totalEnd = now;
       } else if (now > lunchEnd && now < endPM) {
         totalMinutes = diffMinutes(startAM, now) - diffMinutes(lunchStart, lunchEnd);
-        totalEnd = now;
       } else if (now >= endPM) {
         totalMinutes = diffMinutes(startAM, endPM) - diffMinutes(lunchStart, lunchEnd);
         totalEnd = endPM;
-      } else {
-        totalEnd = lunchStart;
       }
-      document.getElementById("end-total").textContent = totalEnd.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      document.getElementById("end-total").textContent = totalEnd.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
       document.getElementById("total-min").value = totalMinutes;
       document.getElementById("total-hm").value = formatHM(totalMinutes);
     }
@@ -121,4 +240,5 @@
     updateClock();
   </script>
 </body>
+
 </html>
