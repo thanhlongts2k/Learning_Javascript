@@ -90,10 +90,7 @@
 
             let bankId = (bankElement?.value?.trim() === "") ? bankIdDefault : (bankElement?.value ?? bankIdDefault);
             let accountId = (accountIdElement?.value?.trim() === "") ? accountIdDefault : (accountIdElement?.value ?? accountIdDefault);
-            let bankingDescription =
-                ((bankingDescriptionElement?.value?.trim() === "") && (accountId === accountNameDefault))
-                    ? bankingDescriptionDefault
-                    : (bankingDescriptionElement?.value ?? bankingDescriptionDefault);
+            let bankingDescription = bankingDescriptionElement?.value?.trim() || bankingDescriptionDefault;
             let accountName = (accountNameElement?.value?.trim() === "") ? accountNameDefault : (accountNameElement?.value ?? accountNameDefault);
 
             let amount = 0;
